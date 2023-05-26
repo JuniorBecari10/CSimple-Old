@@ -3,7 +3,7 @@ package lexer
 import (
   "testing"
   
-  "simple/token"
+  "csimple/token"
 )
 
 func TestLexer(t *testing.T) {

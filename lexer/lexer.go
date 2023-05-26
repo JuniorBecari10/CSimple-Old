@@ -5,7 +5,7 @@ import (
   "fmt"
   "unicode"
   
-  "simple/token"
+  "csimple/token"
 )
 
 type Lexer struct {

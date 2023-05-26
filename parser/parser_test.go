@@ -4,9 +4,9 @@ import (
   "testing"
   "reflect"
   
-  "simple/token"
-  "simple/lexer"
-  "simple/ast"
+  "csimple/token"
+  "csimple/lexer"
+  "csimple/ast"
 )
 
 func TestParser(t *testing.T) {
