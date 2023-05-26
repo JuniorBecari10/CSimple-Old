@@ -47,7 +47,7 @@ func main() {
 func help() {
   fmt.Println("CSimple - " + Version)
   
-  fmt.Println("\nThis is the compiled version of simple.\n")
+  fmt.Println("\nThis is the compiled version of Simple.\n")
   
   fmt.Println("Usage: csimple [file] | [-v | --version] | [-h | --help]\n")
   
