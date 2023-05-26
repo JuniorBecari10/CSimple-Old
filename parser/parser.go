@@ -100,6 +100,10 @@ func (this *Parser) parseVarDeclStatement() ast.Statement {
   this.advance()
   stat.Value = this.parseExpression()
   
+  if stat.Value == nil {
+    return ast.ErrorStatement { Msg: "Invalid value. Try to change it." }
+  }
+  
   return stat
 }
 
@@ -119,6 +123,10 @@ func (this *Parser) parseOperationStatement() ast.Statement {
   this.advance()
   stat.Value = this.parseExpression()
   
+  if stat.Value == nil {
+    return ast.ErrorStatement { Msg: "Invalid value. Try to change it." }
+  }
+  
   return stat
 }
 
@@ -136,6 +144,10 @@ func (this *Parser) parsePrintStatement() ast.Statement {
   stat.Token = tk
   stat.BreakLine = tk.Type != token.PrintKw
   stat.Expression = expr
+  
+  if stat.Expression == nil {
+    return ast.ErrorStatement { Msg: "Invalid value. Try to change it." }
+  }
   
   this.advance()
   
@@ -155,6 +167,10 @@ func (this *Parser) parseGotoStatement() ast.Statement {
   
   stat.Token = tk
   stat.Label = label
+  
+  if stat.Label == "" || stat.Label == ":" {
+    return ast.ErrorStatement { Msg: "Invalid label name. Examples: :start, :loop." }
+  }
   
   this.advance()
   
@@ -185,6 +201,14 @@ func (this *Parser) parseIfStatement() ast.Statement {
   stat.Expression = exp
   stat.Label = label
   
+  if stat.Expression == nil {
+    return ast.ErrorStatement { Msg: "Invalid expression." }
+  }
+  
+  if stat.Label == "" || stat.Label == ":" {
+    return ast.ErrorStatement { Msg: "Invalid label name. Examples: :start, :loop." }
+  }
+  
   this.advance()
   
   return stat
@@ -194,7 +218,13 @@ func (this *Parser) parseLabelStatement() ast.Statement {
   tk := this.token()
   this.advance()
   
-  return ast.LabelStatement { tk.Content[1:] }
+  label := tk.Content[1:]
+  
+  if label == "" || label == ":" {
+    return ast.ErrorStatement { Msg: "Invalid label name. Examples: :start, :loop." }
+  }
+  
+  return ast.LabelStatement { label }
 }
 
 func (this *Parser) parseExitStatement() ast.Statement {

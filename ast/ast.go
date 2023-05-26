@@ -144,6 +144,10 @@ type ExecNode struct {
   Command ExpressionNode
 }
 
+type ErrorNode struct {
+  Msg string
+}
+
 func (i Identifier)    exNode() {}
 func (n NumberNode)    exNode() {}
 func (s StringNode)    exNode() {}
@@ -154,3 +158,4 @@ func (i InputNode)     exNode() {}
 func (b BoolNode)      exNode() {}
 func (f FactorialNode) exNode() {}
 func (e ExecNode)      exNode() {}
+func (e ErrorNode)     exNode() {}
