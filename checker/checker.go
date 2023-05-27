@@ -18,6 +18,11 @@ func (this *Checker) Check() {
 
 func (this *Checker) CheckZeroDivision() error {
   switch this.statement.(type) {
+    case ast.EndStatement:
+    case ast.LabelStatement:
+    case ast.RetStatement:
+      return nil
+    
     
   }
 }
