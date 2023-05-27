@@ -55,7 +55,8 @@ type IfStatement struct {
   Token      token.Token // goto keyword
   Expression ExpressionNode
   Label      string
-  Statement Statement // in case of being 'run'
+  IsJump     bool
+  Statement  Statement // in case of being 'run'
 }
 
 type ExpressionStatement struct {

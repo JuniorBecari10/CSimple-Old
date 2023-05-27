@@ -10,7 +10,7 @@ import (
 )
 
 func TestParser(t *testing.T) {
-  input := `if true run ret`
+  input := `jump :hello`
   
   tokens := lexer.Lex(input)
   checkLexerErrors(t, tokens)
@@ -18,13 +18,9 @@ func TestParser(t *testing.T) {
   stats := Parse(tokens)
   
   expect := []ast.Statement {
-    ast.IfStatement {
-      Token: token.Token { token.IfKw, "if", 0 },
-      Expression: ast.BoolNode {
-        ast.TrueType,
-      },
-      Label: "",
-      Statement: ast.RetStatement {},
+    ast.JumpStatement {
+      T
+      Label: ":hello",
     },
     ast.EndStatement {},
   }

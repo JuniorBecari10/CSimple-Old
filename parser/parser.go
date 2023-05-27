@@ -216,19 +216,24 @@ func (this *Parser) parseIfStatement() ast.Statement {
     return ast.ErrorStatement { Msg: "Syntax error in a if statement: expected 'goto', 'jump' or 'run', but got '" + this.token().Content + "'.\nExamples: if a < 1 goto :jump, if false | b jump :label." }
   }
   
-  this.advance()
-  
-  if this.token().Type != token.GotoKw && this.token().Type != token.JumpKw  {
+  if this.token().Type == token.GotoKw || this.token().Type == token.JumpKw {
+    stat.IsJump = this.token().Type == token.JumpKw
+    
+    this.advance()
     label := this.token().Content
     
     if tk.Type == token.Error || this.token().Type != token.Label {
       return ast.ErrorStatement { Msg: "Syntax error in a if statement. Examples: if a < 1 goto :jump, if false | b goto :label." }
     }
     
+    if label == "" || label == ":" {
+      return ast.ErrorStatement { Msg: "Invalid label name. Examples: :start, :loop." }
+    }
+    
     stat.Label = label
   }
   
-  if this.token().Type != token.RunKw {
+  if this.token().Type == token.RunKw {
     this.advance()
     
     p := New(this.tokens[this.Cursor:])
@@ -252,10 +257,6 @@ func (this *Parser) parseIfStatement() ast.Statement {
   
   if stat.Expression == nil {
     return ast.ErrorStatement { Msg: "Invalid expression. Try changing it." }
-  }
-  
-  if stat.Label == "" || stat.Label == ":" {
-    return ast.ErrorStatement { Msg: "Invalid label name. Examples: :start, :loop." }
   }
   
   this.advance()
