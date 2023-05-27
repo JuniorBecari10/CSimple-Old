@@ -12,6 +12,8 @@ const (
   InputKw      = "InputKw"
   IfKw         = "IfKw"
   GotoKw       = "GotoKw"
+  JumpKw       = "JumpKw"
+  RunKw        = "RunKw"
   ExitKw       = "ExitKw"
   RetKw        = "RetKw"
   ExecKw       = "ExecKw"
@@ -80,6 +82,8 @@ var Keywords = []string {
   "false",
   "if",
   "goto",
+  "jump",
+  "run",
   "exit",
   "ret",
   "exec",
@@ -99,6 +103,8 @@ var KeyTokens = map[string]TokenType {
   "false":   FalseKw,
   "if":      IfKw,
   "goto":    GotoKw,
+  "jump":    JumpKw,
+  "run":     RunKw,
   "exit":    ExitKw,
   "ret":     RetKw,
   "exec":    ExecKw,

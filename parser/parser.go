@@ -62,6 +62,10 @@ func (this *Parser) NextStatement() ast.Statement {
     return this.parseGotoStatement()
   }
   
+  if len(this.tokens) >= 1 && this.token().Type == token.JumpKw {
+    return this.parseJumpStatement()
+  }
+  
   if len(this.tokens) >= 1 && this.token().Type == token.IfKw {
     return this.parseIfStatement()
   }
@@ -162,7 +166,30 @@ func (this *Parser) parseGotoStatement() ast.Statement {
   label := this.token().Content
   
   if tk.Type == token.Error || this.token().Type != token.Label {
-    return ast.ErrorStatement { Msg: "Syntax error in a goto statement. Examples: goto :jump, goto :label." }
+    return ast.ErrorStatement { Msg: "Syntax error in a goto statement. Examples: goto :start, goto :label." }
+  }
+  
+  stat.Token = tk
+  stat.Label = label
+  
+  if stat.Label == "" || stat.Label == ":" {
+    return ast.ErrorStatement { Msg: "Invalid label name. Examples: :start, :loop." }
+  }
+  
+  this.advance()
+  
+  return stat
+}
+
+func (this *Parser) parseJumpStatement() ast.Statement {
+  stat := ast.JumpStatement {}
+  
+  tk := this.token()
+  this.advance()
+  label := this.token().Content
+  
+  if tk.Type == token.Error || this.token().Type != token.Label {
+    return ast.ErrorStatement { Msg: "Syntax error in a jump statement. Examples: jump :start, jump :label." }
   }
   
   stat.Token = tk
@@ -185,21 +212,43 @@ func (this *Parser) parseIfStatement() ast.Statement {
   
   exp := this.parseExpression()
   
-  if this.token().Type != token.GotoKw {
-    return ast.ErrorStatement { Msg: "Syntax error in a if statement: expected 'goto', got '" + this.token().Content + "'.\nExamples: if a < 1 goto :jump, if false | b goto :label." }
+  if this.token().Type != token.GotoKw && this.token().Type != token.JumpKw && this.token().Type != token.RunKw {
+    return ast.ErrorStatement { Msg: "Syntax error in a if statement: expected 'goto', 'jump' or 'run', but got '" + this.token().Content + "'.\nExamples: if a < 1 goto :jump, if false | b jump :label." }
   }
   
   this.advance()
   
-  label := this.token().Content
+  if this.token().Type != token.GotoKw && this.token().Type != token.JumpKw  {
+    label := this.token().Content
+    
+    if tk.Type == token.Error || this.token().Type != token.Label {
+      return ast.ErrorStatement { Msg: "Syntax error in a if statement. Examples: if a < 1 goto :jump, if false | b goto :label." }
+    }
+    
+    stat.Label = label
+  }
   
-  if tk.Type == token.Error || this.token().Type != token.Label {
-    return ast.ErrorStatement { Msg: "Syntax error in a if statement. Examples: if a < 1 goto :jump, if false | b goto :label." }
+  if this.token().Type != token.RunKw {
+    this.advance()
+    
+    p := New(this.tokens[this.Cursor:])
+    st := p.NextStatement()
+    
+    if st == nil {
+      return ast.ErrorStatement { Msg: "Invalid statement." }
+    }
+    
+    errs := CheckErrors([]ast.Statement { st })
+    
+    if len(errs) > 0 {
+      return ast.ErrorStatement { errs[0] }
+    }
+    
+    stat.Statement = st
   }
   
   stat.Token = tk
   stat.Expression = exp
-  stat.Label = label
   
   if stat.Expression == nil {
     return ast.ErrorStatement { Msg: "Invalid expression. Try changing it." }

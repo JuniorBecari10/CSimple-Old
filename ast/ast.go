@@ -44,11 +44,18 @@ type GotoStatement struct {
   Label string
 }
 
+// Syntax: jump :<label>
+type JumpStatement struct {
+  Token token.Token // jump keyword
+  Label string
+}
+
 // Syntax: if <expression> goto :<label>
 type IfStatement struct {
   Token      token.Token // goto keyword
   Expression ExpressionNode
   Label      string
+  Statement Statement // in case of being 'run'
 }
 
 type ExpressionStatement struct {
@@ -79,6 +86,7 @@ func (ls LabelStatement)      stat() {}
 func (es ExitStatement)       stat() {}
 func (rs RetStatement)        stat() {}
 func (gs GotoStatement)       stat() {}
+func (js JumpStatement)       stat() {}
 func (is IfStatement)         stat() {}
 func (es ExpressionStatement) stat() {}
 func (es ErrorStatement)      stat() {}
@@ -91,6 +99,7 @@ func (ls LabelStatement)      node() {}
 func (es ExitStatement)       node() {}
 func (rs RetStatement)        node() {}
 func (gs GotoStatement)       node() {}
+func (js JumpStatement)       node() {}
 func (is IfStatement)         node() {}
 func (es ExpressionStatement) node() {}
 func (es ErrorStatement)      node() {}

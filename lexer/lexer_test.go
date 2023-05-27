@@ -7,12 +7,12 @@ import (
 )
 
 func TestLexer(t *testing.T) {
-  inp := "^ ^="
+  inp := "run jump"
   tks := Lex(inp)
   
   res := []token.Token {
-    {token.Power, "^", 0},
-    {token.PowerAssign, "^=", 0},
+    {token.RunKw, "run", 0},
+    {token.JumpKw, "jump", 0},
     {token.End, "", 0},
   }
   
