@@ -19,7 +19,7 @@ func TestParser(t *testing.T) {
   
   expect := []ast.Statement {
     ast.JumpStatement {
-      T
+      Token: token.Token { token.JumpKw, "jump", 0 },
       Label: ":hello",
     },
     ast.EndStatement {},
