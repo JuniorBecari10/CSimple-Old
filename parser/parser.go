@@ -101,7 +101,7 @@ func (this *Parser) parseVarDeclStatement() ast.Statement {
   stat.Value = this.parseExpression()
   
   if stat.Value == nil {
-    return ast.ErrorStatement { Msg: "Invalid value. Try to change it." }
+    return ast.ErrorStatement { Msg: "Invalid value. Try changing it." }
   }
   
   return stat
@@ -124,7 +124,7 @@ func (this *Parser) parseOperationStatement() ast.Statement {
   stat.Value = this.parseExpression()
   
   if stat.Value == nil {
-    return ast.ErrorStatement { Msg: "Invalid value. Try to change it." }
+    return ast.ErrorStatement { Msg: "Invalid value. Try changing it." }
   }
   
   return stat
@@ -146,7 +146,7 @@ func (this *Parser) parsePrintStatement() ast.Statement {
   stat.Expression = expr
   
   if stat.Expression == nil {
-    return ast.ErrorStatement { Msg: "Invalid value. Try to change it." }
+    return ast.ErrorStatement { Msg: "Invalid value. Try changing it." }
   }
   
   this.advance()
@@ -202,7 +202,7 @@ func (this *Parser) parseIfStatement() ast.Statement {
   stat.Label = label
   
   if stat.Expression == nil {
-    return ast.ErrorStatement { Msg: "Invalid expression." }
+    return ast.ErrorStatement { Msg: "Invalid expression. Try changing it." }
   }
   
   if stat.Label == "" || stat.Label == ":" {
@@ -233,10 +233,14 @@ func (this *Parser) parseExitStatement() ast.Statement {
   if this.token().Type == token.Number {
     exp := this.parseExpression()
     
+    if exp == nil {
+      return ast.ErrorStatement { Msg: "Invalid value. Try changing it." }
+    }
+    
     return ast.ExitStatement { exp }
   }
   
-  return ast.ExitStatement { ast.NumberNode { -1 } }
+  return ast.ExitStatement { ast.NumberNode { 0 } }
 }
 
 func (this *Parser) parseExpression() ast.ExpressionNode {

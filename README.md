@@ -2,24 +2,30 @@
 
 # CSimple
 
-The compiled version of Simple.
+The compiled version of [Simple](https://github.com/JuniorBecari10/Simple).
 
 ## How to Compile
 
 ```
-$ csimple [file] | [-v | --version] | [-h | --help]
+$ csimple [file] | [-v | --version] | [-h | --help] | [-s | --asm] | [-os <'win', 'lin'>]
 ```
 
-`file` - The script file you want to compile; <br>
-`-v` or `--version` - Show the version number; <br>
+Argument | Description
+---|---
+`file` | The script file you want to compile.
+`-v` or `--version` | Show the version number.
+`-h` or `--help` | Show help message.
+`-s` or `--asm` | Output only the `.asm` file, without assembling or linking.
+`-os <'win', 'lin'>` | Choose the target operating system to generate the binary. You can choose either Windows (`'win'`) or Linux (`'lin'`) binary forms. If ommitted, a binary file according to your operating system will be generated.
 
 ## How to Execute
 
-CSimple generates a single `.asm` file, without assembling or linking. <br>
-You have to do so on your own, here's how:
+CSimple generates a binary file according to your operating system (if you haven't specified the target OS), ready for running.
+
+If you generated a single `.asm` file, without assembling or linking, and you want to compile it manually, here's how to do it:
 
 Requirements:
-- Nasm compiler;
+- NASM assembler;
 - A linker (`ld` command).
 
 ### Linux (Unix-Based Systems)
@@ -27,8 +33,9 @@ Requirements:
 ```
 nasm -f elf <file>.asm
 ld -m elf_i386 <file>.o -o <file>
-./<file>
 ```
+
+Now, just run the program with `./<file>`.
 
 Certify to replace `<file>` with your file's name.
 
